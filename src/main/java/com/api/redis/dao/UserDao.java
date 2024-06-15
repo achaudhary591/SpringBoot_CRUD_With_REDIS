@@ -1,6 +1,7 @@
 package com.api.redis.dao;
 
 import com.api.redis.models.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import java.util.Map;
 public class UserDao {
 
     private static final String KEY = "USER312412";
+
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -38,5 +40,14 @@ public class UserDao {
         redisTemplate.opsForHash().delete(KEY, userId);
     }
 
-
+    //update
+    public User update(String userId, User user) {
+        boolean exists = redisTemplate.opsForHash().hasKey(KEY, userId);
+        if (exists) {
+            redisTemplate.opsForHash().put(KEY, userId, user);
+            return user;
+        } else {
+            return null;// or throw an exception if preferred
+        }
+    }
 }
